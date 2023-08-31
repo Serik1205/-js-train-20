@@ -176,26 +176,22 @@ Truck.prototype.tow = function (weight) {
  */
 let myTruck = new Truck("Toyota", "Tundra", 2019, 20000, "Red", "V8", 10000, "Gasoline", "Automatic", 4, 5600)
 // Викликаємо метод tow з вагою меншою за towingCapacity
-myTruck.tow = function (weight) {
-	weight < this.towingCapacity;
-}
+myTruck.tow(9000);
 
 
 // Викликаємо метод tow з вагою більшою за towingCapacity
-myTruck.tow = function (weight) {
-	weight > this.towingCapacity;
-}
+myTruck.tow(11000);
 // Додаємо метод drive для прототипу Car, який збільшує kilometers на передане число, та виводить Подорожуємо <kilometers> кілометрів у <brand> <model>.
 Car.prototype.drave = function (kilometers) {
 	this.mileage += kilometers;
-	console.log(`Подорожуємо ${kilometers} кілометрів у ${brand} ${model}.`);
+	console.log(`Подорожуємо ${kilometers} кілометрів у ${brand} ${model}`);
 }
 // Використовуємо bind для зв'язування методу drive з конкретним об'єктом car.
-Car.bind(car)
+let driveCar = car.drive.bind(car);
+
 // Це створює нову функцію, в якій this постійно встановлено на car, незалежно від того, як функцію викликають.
 // Викликаємо функцію зі значенням 100,
-Car("100");
-
+driveCar(100);
 /*
  * Функція конструктор: ElectricCar
  * Властивості:
@@ -211,13 +207,21 @@ Car("100");
 
 function ElectricCar(brand, model, year, mileage, batteryCapacity) {
 	// Перевіряємо, чи функцію було викликано з new, якщо ні виволимо помилку "Конструктор має бути викликаний з 'new'"
+	if (!new.target) {
+		throw new Error("Конструктор має бути викликаний з 'new'");
+	}
 	// Викликаємо Car.call та передаємо в нього this, brand, model, year, mileage
+	Car.call(this, brand, model, year, mileage);
 	//  Записуєм в this.batteryCapacity значення аргументу batteryCapacity
+	this.batteryCapacity = batteryCapacity;
 }
 
 // Перевизначаємо toString для прототипу ElectricCar він має повертати <brand> <model> <year> - Батарея: <batteryCapacity> kWh
-
+ElectricCar.prototype.toString = function () {
+	return `${this.brand} ${this.model} (${this.year}) - Батарея: ${this.batteryCapacity}kWh`;
+};
 // Створюємо новий екземпляр ElectricCar
+let tesla = new ElectricCar("Tesla", "Model S", 2020, 10000, 100);
 /*
  * Екземпляр об'єкту: ElectricCar
  * Властивості:
@@ -232,3 +236,4 @@ function ElectricCar(brand, model, year, mileage, batteryCapacity) {
  */
 
 // Викликаємо метод toString об'єкту tesla та виводимо в консоль
+console.log(tesla.toString());
